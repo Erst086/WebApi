@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
-from werkzeug.security import generate_password_hash, check_password_hash
-from app import mongo  # el mongo global de __init__.py
+from app.services.user_service import create_user, get_user_by_username
+from app.utils.security import generate_token
+import bcrypt
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -8,33 +9,23 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
-    nombre = data.get("nombre")
-    correo = data.get("correo")
-    telefono = data.get("telefono")
-    username = data.get("username")
-    password = data.get("password")
+
+    # Validar campos obligatorios
+    required_fields = ["nombre", "correo", "telefono", "username", "password"]
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({"msg": f"Falta el campo {field}"}), 400
+
+    # Validar rol
     role = data.get("role", "user")
-
-    if not username or not password or not correo or not nombre:
-        return jsonify({"msg": "Faltan campos obligatorios"}), 400
-
     if role not in ["admin", "user"]:
         return jsonify({"msg": "Rol inválido"}), 400
 
-    if mongo.db.users.find_one({"username": username}):
-        return jsonify({"msg": "Usuario ya existe"}), 400
-    if mongo.db.users.find_one({"correo": correo}):
-        return jsonify({"msg": "Correo ya registrado"}), 400
+    # Crear usuario mediante el servicio
+    user, error = create_user(data)
+    if error:
+        return jsonify({"msg": error}), 400
 
-    hashed_password = generate_password_hash(password)
-    mongo.db.users.insert_one({
-        "nombre": nombre,
-        "correo": correo,
-        "telefono": telefono,
-        "username": username,
-        "password": hashed_password,
-        "role": role
-    })
     return jsonify({"msg": "Usuario creado correctamente"}), 201
 
 # --- Login ---
@@ -47,14 +38,18 @@ def login():
     if not username or not password:
         return jsonify({"msg": "Faltan campos obligatorios"}), 400
 
-    user = mongo.db.users.find_one({"username": username})
+    user = get_user_by_username(username)
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
 
-    if not check_password_hash(user["password"], password):
+    # Verificar contraseña
+    if not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         return jsonify({"msg": "Contraseña incorrecta"}), 401
 
+    token = generate_token(user_id=str(user["_id"]), role=user.get("role", "user"))
+
     return jsonify({
+        "token": token,
         "username": user["username"],
         "role": user.get("role", "user"),
         "nombre": user.get("nombre")

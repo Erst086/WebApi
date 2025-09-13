@@ -1,28 +1,30 @@
-import os
+# app/__init__.py
 from flask import Flask
 from flask_pymongo import PyMongo
 from flask_cors import CORS
+import os
 from dotenv import load_dotenv
 
-load_dotenv()
-
-# Instancia global
 mongo = PyMongo()
+load_dotenv()
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
-
-    # Configuración desde .env
+    
+    # Config
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-    print("MONGO_URI desde .env:", os.getenv("MONGO_URI"))
-
-    # Inicializa mongo con la app
+    
+    # Inicializa CORS
+    CORS(app, resources={r"/*": {"origins": "*"}})
+    
+    # Inicializa Mongo
     mongo.init_app(app)
 
-    # Importa rutas después de inicializar mongo
+    # Importa y registra blueprints
     from app.routes.auth import auth_bp
+    from app.routes.main import main_bp
     app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(main_bp, url_prefix="/main")
 
     return app
