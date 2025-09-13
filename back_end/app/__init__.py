@@ -27,4 +27,9 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(main_bp, url_prefix="/main")
 
+    # Importa y registrar productos
+    from app.routes.productos import productos_bp
+    app.register_blueprint(productos_bp, url_prefix="/productos")
+
+
     return app
