@@ -1,0 +1,26 @@
+Pasos para correr el back y forn  back con flask y front con netxjs  
+
+Paso 1 Clonar el repo de git con  (  git clone https://github.com/Erst086/WebApi.git   )
+
+paso 2 Estar adentro dle directorio "WebApi" podras ver 2 carpetas back_end  y front_end  si estas ahi perfecto 
+
+paso 3 Ejecutar los sigueintes comando en este orden  
+    1: ---   cd back_end                        ----
+    2: ---   source venv/bin/activate           ----
+    3: ---   pip install -r requirements.txt    ----
+    4: ---   python3 run.py                     ----
+
+
+paso 4 Abrir otra terminal y estar dentro del directorio ----  WebApi/front_end  ----
+
+    si te encuentras dentro de " WebApi " solo basta con ejecutar  --- cd/front_end ---
+
+paso 4 Ejecutar los sigueintes comndos en este orden
+    1: ---   npm install                        ----
+    2: ---   npm run build                      ----
+    3: ---   npm run start                      ----
+    
+Paso 5 Ingresar esta direccion en tu navegador http://localhost:3000/
+
+
+paso 6: FIn
