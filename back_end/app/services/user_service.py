@@ -23,3 +23,10 @@ def get_user_by_id(user_id):
         return mongo.db.users.find_one({"_id": ObjectId(user_id)})
     except Exception:
         return None
+def delete_user_by_id(user_id):
+    """Elimina un usuario de la BD por su ID"""
+    try:
+        result = mongo.db.users.delete_one({"_id": ObjectId(user_id)})
+        return result.deleted_count > 0
+    except Exception:
+        return False

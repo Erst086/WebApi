@@ -1,8 +1,8 @@
-import '../styles/globals.css'; // Css hecho a mano
-import '../css/input.css';       // Tailwind + utilities
+import '../styles/globals.css'; 
+import '../css/input.css'; 
 
-function MyApp({ Component, pageProps }) {
+function front({ Component, pageProps }) {
   return <Component {...pageProps} />
 }
 
-export default MyApp;
+export default front;

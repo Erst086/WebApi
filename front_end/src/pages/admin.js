@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-export default function AdminPage() {
+export default function VistaAdmin() {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [productos, setProductos] = useState([]);
-  const [preciosEdit, setPreciosEdit] = useState({});
+  const [isClient, ifCLiente] = useState(false);
+  const [message, mensaje] = useState("");
+  const [loading, cargar] = useState(true);
+  const [productos, newProducto] = useState([]);
+  const [preciosEdit, editPrecio] = useState({});
 
-  useEffect(() => setIsClient(true), []);
+  useEffect(() => {
+    ifCLiente(true);
+  }, []);
 
   useEffect(() => {
     if (!isClient) return;
@@ -17,12 +19,13 @@ export default function AdminPage() {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
 
+
     if (!token || role !== "admin") {
       router.replace("/login");
       return;
     }
 
-    const fetchAdmin = async () => {
+    const fetchAdminData = async () => {
       try {
         const res = await fetch("http://localhost:5000/main/admin", {
           headers: {
@@ -30,34 +33,35 @@ export default function AdminPage() {
             Authorization: `Bearer ${token}`,
           },
         });
+
         const data = await res.json();
         if (!res.ok) {
           alert(data.msg || "Acceso denegado");
           router.replace("/login");
           return;
         }
-        setMessage(data.msg);
+        mensaje(data.msg);
 
         const prodRes = await fetch("http://localhost:5000/productos/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const prodData = await prodRes.json();
-        setProductos(Array.isArray(prodData) ? prodData : []);
+        newProducto(Array.isArray(prodData) ? prodData : []);
 
         const initialPrices = {};
         (Array.isArray(prodData) ? prodData : []).forEach((p) => {
           initialPrices[p._id] = p.precio;
         });
-        setPreciosEdit(initialPrices);
+        editPrecio(initialPrices);
       } catch (err) {
         console.error(err);
         router.replace("/login");
       } finally {
-        setLoading(false);
+        cargar(false);
       }
     };
 
-    fetchAdmin();
+    fetchAdminData();
   }, [isClient, router]);
 
   const handleGuardarPrecio = async (id) => {
@@ -75,7 +79,7 @@ export default function AdminPage() {
       });
 
       if (res.ok) {
-        setProductos((prev) =>
+        newProducto((prev) =>
           prev.map((p) => (p._id === id ? { ...p, precio } : p))
         );
         alert("Precio actualizado");
@@ -90,10 +94,10 @@ export default function AdminPage() {
   };
 
   if (!isClient || loading) {
-    return <p className="text-center mt-10">Cargando panel de administración...</p>;
+    return <p className="text-center mt-10">Cargando vista Admin...</p>;
   }
 
-  // Función para dividir productos en filas de 4
+  // Dividir productos en filas de 4
   const filas = [];
   for (let i = 0; i < productos.length; i += 4) {
     filas.push(productos.slice(i, i + 4));
@@ -105,7 +109,7 @@ export default function AdminPage() {
       style={{ background: "var(--background)", color: "var(--foreground)" }}
     >
       <div className="w-full max-w-6xl flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold">Panel de Administración</h1>
+        <h1 className="text-4xl font-bold">Panel de Admin</h1>
         <button
           className="btn-accent"
           onClick={() => {
@@ -114,8 +118,15 @@ export default function AdminPage() {
             router.replace("/");
           }}
         >
-          Cerrar Sesión
+          Cerrar Sesion
         </button>
+        {/*
+        <button
+          className="btn-accent"
+          onClick={() => router.push("/adminUsr")}
+        >
+          Administrar Usuarios
+        </button>*/}
       </div>
 
       <p className="mb-6">{message}</p>
@@ -138,7 +149,7 @@ export default function AdminPage() {
                     className="border rounded px-2 py-1 w-full"
                     value={preciosEdit[p._id]}
                     onChange={(e) =>
-                      setPreciosEdit({ ...preciosEdit, [p._id]: parseFloat(e.target.value) })
+                      editPrecio({ ...preciosEdit, [p._id]: parseFloat(e.target.value) })
                     }
                   />
                   <button

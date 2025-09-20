@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.services.user_service import create_user, get_user_by_username
-from app.utils.security import generate_token
+from app.utils.security import new_token
 import bcrypt
 
 auth_bp = Blueprint("auth", __name__)
@@ -46,7 +46,7 @@ def login():
     if not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         return jsonify({"msg": "Contraseña incorrecta"}), 401
 
-    token = generate_token(user_id=str(user["_id"]), role=user.get("role", "user"))
+    token = new_token(user_id=str(user["_id"]), role=user.get("role", "user"))
 
     return jsonify({
         "token": token,

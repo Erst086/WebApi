@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, newUsuario] = useState("");
+  const [password, passNew] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,11 +25,11 @@ export default function Login() {
 
         router.push(data.role === "admin" ? "/admin" : "/");
       } else {
-        alert(data.msg || "Error al iniciar sesión");
+        alert(data.msg || "Error inicio de sesion");
       }
     } catch (err) {
       console.error(err);
-      alert("Error al iniciar sesión");
+      alert("Error inicio de sesion");
     }
   };
 
@@ -39,21 +39,21 @@ export default function Login() {
       style={{ background: "var(--background)", color: "var(--foreground)" }}
     >
       <form onSubmit={handleLogin} className="card w-full max-w-md p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center">Iniciar Sesión</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center">Iniciar Sesion</h2>
 
         <input
           className="input"
           type="text"
           placeholder="Usuario"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => newUsuario(e.target.value)}
         />
         <input
           className="input"
           type="password"
           placeholder="Contraseña"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => passNew(e.target.value)}
         />
 
         <button type="submit" className="btn-primary w-full mt-4">

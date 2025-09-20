@@ -2,8 +2,10 @@ import Header from "../html/Header";
 import ProductCard from "../html/ProductCard";
 import Footer from "../html/Footer";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   const [productos, setProductos] = useState([]);
   const [isLogged, setIsLogged] = useState(false);
   const [username, setUsername] = useState("");
@@ -12,7 +14,13 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLogged(!!token);
+    const role = localStorage.getItem("role");
     setUsername(localStorage.getItem("username") || "");
+
+    if (token && role === "admin") {
+      router.replace("/admin");
+      return;
+    }
 
     const storedCart = localStorage.getItem("carrito");
     setCarrito(storedCart ? JSON.parse(storedCart) : []);
@@ -33,7 +41,7 @@ export default function Home() {
 
   const handleAgregarCarrito = (producto) => {
     if (!isLogged) {
-      alert("Debes iniciar sesión para agregar productos al carrito");
+      alert("Inicia sesion para usar el carrito");
       return;
     }
     const nuevoCarrito = [...carrito, producto];

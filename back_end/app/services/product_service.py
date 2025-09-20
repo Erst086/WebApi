@@ -18,3 +18,13 @@ def actualizar_precio(product_id, nuevo_precio):
         {"_id": ObjectId(product_id)},
         {"$set": {"precio": nuevo_precio}}
     )
+
+def eliminar_producto(product_id):
+    mongo.db.productos.delete_one({"_id": ObjectId(product_id)})
+
+def buscar_producto_por_id(product_id):
+    prod = mongo.db.productos.find_one({"_id": ObjectId(product_id)})
+    if prod:
+        prod["_id"] = str(prod["_id"])
+        return prod
+    return None

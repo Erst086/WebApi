@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter as rutas } from "next/router";
 
 export default function Register() {
-  const router = useRouter();
-  const [nombre, setNombre] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const router = rutas();
+  const [nombre, newNombre] = useState("");
+  const [correo, newCorreo] = useState("");
+  const [telefono, newTelf] = useState("");
+  const [username, newUsers] = useState("");
+  const [password, nesPass] = useState("");
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -45,35 +45,35 @@ export default function Register() {
           type="text" 
           placeholder="Nombre completo" 
           value={nombre} 
-          onChange={(e) => setNombre(e.target.value)} 
+          onChange={(e) => newNombre(e.target.value)} 
         />
         <input 
           className="input" 
           type="email" 
           placeholder="Correo electrónico" 
           value={correo} 
-          onChange={(e) => setCorreo(e.target.value)} 
+          onChange={(e) => newCorreo(e.target.value)} 
         />
         <input 
           className="input" 
           type="text" 
           placeholder="Teléfono" 
           value={telefono} 
-          onChange={(e) => setTelefono(e.target.value)} 
+          onChange={(e) => newTelf(e.target.value)} 
         />
         <input 
           className="input" 
           type="text" 
           placeholder="Usuario" 
           value={username} 
-          onChange={(e) => setUsername(e.target.value)} 
+          onChange={(e) => newUsers(e.target.value)} 
         />
         <input 
           className="input" 
           type="password" 
           placeholder="Contraseña" 
           value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
+          onChange={(e) => nesPass(e.target.value)} 
         />
 
         <button type="submit" className="btn-primary w-full mt-4">Registrarse</button>
