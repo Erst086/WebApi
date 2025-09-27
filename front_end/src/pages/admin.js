@@ -27,7 +27,7 @@ export default function VistaAdmin() {
 
     const fetchAdminData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/main/admin", {
+        const res = await fetch("/api/main/admin", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ export default function VistaAdmin() {
         }
         mensaje(data.msg);
 
-        const prodRes = await fetch("http://localhost:5000/productos/", {
+        const prodRes = await fetch("/api/productos/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const prodData = await prodRes.json();
@@ -69,7 +69,7 @@ export default function VistaAdmin() {
     const precio = preciosEdit[id];
 
     try {
-      const res = await fetch(`http://localhost:5000/productos/${id}`, {
+      const res = await fetch(`/api/productos/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

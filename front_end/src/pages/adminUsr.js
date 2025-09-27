@@ -24,7 +24,7 @@ export default function AdminUsr() {
 
     const fetchUsuarios = async () => {
       try {
-        const res = await fetch("http://localhost:5000/users", {
+        const res = await fetch("/api/users", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -62,7 +62,7 @@ export default function AdminUsr() {
     const role = rolesEdit[id];
 
     try {
-      const res = await fetch(`http://localhost:5000/users/${id}/role`, {
+      const res = await fetch(`/api/users/${id}/role`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +92,7 @@ export default function AdminUsr() {
     if (!confirm("¿Deseas eliminar el usuario?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/users/${id}`, {
+      const res = await fetch(`/api/users/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

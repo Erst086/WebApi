@@ -27,7 +27,7 @@ export default function Home() {
 
     const fetchProductos = async () => {
       try {
-        const res = await fetch("http://localhost:5000/productos/public");
+        const res = await fetch("/api/productos/public");
         const data = await res.json();
         setProductos(Array.isArray(data) ? data : []);
       } catch (err) {
