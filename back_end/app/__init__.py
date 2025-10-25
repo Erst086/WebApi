@@ -31,5 +31,9 @@ def create_app():
     from app.routes.productos import productos_bp
     app.register_blueprint(productos_bp, url_prefix="/productos")
 
+    @app.route('/robots.txt')
+    def robots_txt():
+    # Busca robots.txt en la raíz del proyecto
+        return send_from_directory(os.path.dirname(os.path.dirname(__file__)), 'robots.txt', mimetype='text/plain')
 
     return app
