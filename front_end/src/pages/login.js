@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Login() {
   const router = useRouter();
+  const { user, loading } = useAuth();
   const [username, newUsuario] = useState("");
   const [password, passNew] = useState("");
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push(user.role === "admin" ? "/admin" : "/");
+    }
+  }, [user, loading, router]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

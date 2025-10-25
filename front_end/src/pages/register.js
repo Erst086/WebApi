@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter as rutas } from "next/router";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Register() {
   const router = rutas();
+  const { user, loading } = useAuth();
   const [nombre, newNombre] = useState("");
   const [correo, newCorreo] = useState("");
   const [telefono, newTelf] = useState("");
   const [username, newUsers] = useState("");
   const [password, nesPass] = useState("");
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push(user.role === "admin" ? "/admin" : "/");
+    }
+  }, [user, loading, router]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
