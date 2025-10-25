@@ -23,4 +23,4 @@ paso 4 Ejecutar los sigueintes comndos en este orden
 Paso 5 Ingresar esta direccion en tu navegador http://localhost:3000/
 
 
-paso 6: FIn
+paso 6: FIn.
